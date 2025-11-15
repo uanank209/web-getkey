@@ -37,16 +37,16 @@ body{background:#02030a;overflow:hidden;height:100vh;color:#fff;}
 @keyframes vAnim{0%{height:10px}50%{height:90px}100%{height:10px}}
 </style>
 <script>
-// Lấy key từ URL, không random
-let path = window.location.pathname.replace("/", "").trim();
-const keyPattern = /^TuanAnk-[A-Z0-9]{4}$/;
-if (keyPattern.test(path)) {
-    window.generatedKey = path;
-    document.title = path;
-} else {
-    window.generatedKey = "KEY KHÔNG HỢP LỆ";
-    document.title = "Sai Key";
+// --- LẤY KEY TỪ URL DẠNG ?key=TuanAnk-XXXX ---
+function getKeyFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const key = params.get("key");
+    const pattern = /^TuanAnk-[A-Z0-9]{4}$/;
+    if (key && pattern.test(key)) return key;
+    return "KEY KHÔNG HỢP LỆ";
 }
+window.generatedKey = getKeyFromURL();
+document.title = window.generatedKey;
 </script>
 </head>
 <body>
@@ -57,7 +57,7 @@ for(let i=0;i<40;i++){let b=document.createElement("div");b.className="vbar";b.s
 </script>
 <div class="card" id="card">
 <div class="header"><div class="avt"><img src="https://i.imgur.com/hpRPvKK.jpeg"></div><div><div class="title">GetKey - Tuấn Ank</div><div class="sub">Ultra VIP Neon Edition</div></div></div>
-<div class="kbox"><div class="ktext" id="k">'+window.generatedKey+'</div><button class="copy" id="cbtn">COPY</button></div>
+<div class="kbox"><div class="ktext" id="k"><//div><button class="copy" id="cbtn">COPY</button></div>
 <div class="links">
 <a class="lbtn" href="https://facebook.com/anhyeuemnhamlun">Facebook</a>
 <a class="lbtn" href="https://zalo.me/84763465951">Zalo</a>
@@ -71,6 +71,9 @@ cbtn.onclick=()=>{navigator.clipboard.writeText(k.textContent);cbtn.textContent=
 </script>
 <script>
 document.getElementById("keyBox").textContent = window.generatedKey;
+</script>
+<script>
+document.getElementById("k").textContent = window.generatedKey;
 </script>
 </body>
 </html>

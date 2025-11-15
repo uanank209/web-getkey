@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Siêu xịn - Key</title>
+<style>
+  /* Basic reset */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family: system-ui, Arial, sans-serif;
+    background: #000;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    overflow:hidden;
+  }
+
+  /* Glow background */
+  #glowBG{
+    position:fixed;inset:0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(0,255,255,0.14), transparent 20%),
+      radial-gradient(circle at 80% 70%, rgba(255,0,255,0.12), transparent 20%);
+    mix-blend-mode:screen;
+    filter:blur(20px);
+    z-index:0;
+    pointer-events:none;
+  }
+
+  /* Card */
+  .card{
+    position:relative;
+    z-index:2;
+    width:360px;
+    background:rgba(255,255,255,0.03);
+    border-radius:16px;
+    padding:26px;
+    text-align:center;
+    box-shadow:0 8px 30px rgba(0,0,0,0.7), 0 0 20px rgba(0,200,180,0.08);
+    backdrop-filter: blur(6px);
+  }
+
+  /* Avatar */
+  .avatar{
+    width:130px;height:130px;border-radius:50%;
+    background-image:url('https://i.imgur.com/hpRPvKK.jpeg');
+    background-size:cover;background-position:center;
+    margin:0 auto 18px auto;
+    box-shadow:0 0 18px rgba(0,255,220,0.18);
+  }
+
+  /* Key box */
+  #keyBox{
+    width:260px;height:56px;margin:10px auto 18px auto;
+    background:#fff;color:#000;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:22px;letter-spacing:2px;
+    cursor:pointer;position:relative;overflow:hidden;
+    border:2px solid rgba(0,0,0,0.06);
+  }
+  /* RGB animated border */
+  #keyBox::before{
+    content:'';position:absolute;inset:-3px;border-radius:12px;
+    background:linear-gradient(90deg,#ff00e0,#00e1ff,#00ff73,#ffe600,#ff00e0);
+    background-size:400% 400%;filter:blur(6px);z-index:-1;opacity:.88;
+    animation:rgbMove 4s linear infinite;
+  }
+  @keyframes rgbMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+  /* Links - each in a rectangle */
+  .links{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+  .links a{
+    display:block;padding:12px 14px;border-radius:12px;text-decoration:none;
+    font-weight:700;font-size:16px;color:#000;background:rgba(255,255,255,0.9);
+    transition:transform .18s, box-shadow .18s;position:relative;overflow:hidden;
+  }
+  .links a:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,0,0,0.35)}
+
+  /* Bar lights and pulses (club feel) */
+  .bar-light{position:fixed;width:180px;height:8px;background:rgba(0,255,255,0.7);filter:blur(6px);pointer-events:none;z-index:1;opacity:.9}
+  .neonPulse{position:fixed;width:40px;height:40px;border-radius:50%;background:rgba(0,255,180,0.45);filter:blur(20px);pointer-events:none;z-index:1}
+
+  /* Laser sweep, smoke, spotlight, spark, bass glow */
+  #laserSweep{position:fixed;top:0;left:-200px;width:200px;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,255,0.45),transparent);filter:blur(5px);z-index:1;pointer-events:none}
+  #smokeFX{position:fixed;width:200%;height:200%;top:-50%;left:-50%;background:url('https://i.imgur.com/O7MZ8gJ.png');background-size:cover;opacity:0.14;filter:blur(12px);z-index:0;pointer-events:none}
+  #spotlight{position:fixed;width:600px;height:600px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle, rgba(255,255,255,0.14), transparent 70%);z-index:0;pointer-events:none}
+  .spark{position:fixed;width:5px;height:5px;background:white;border-radius:50%;opacity:0.8;z-index:3;pointer-events:none;filter:blur(1px)}
+
+  /* Copy message */
+  #copyMsg{position:fixed;bottom:-60px;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,#00fff2,#00ff7b,#00c3ff);color:#000;padding:12px 22px;border-radius:10px;font-weight:700;opacity:0;transition:.5s;z-index:4;filter:drop-shadow(0 0 10px #00ffe0)}
+
+  /* small responsiveness */
+  @media (max-width:420px){
+    .card{width:92vw;padding:20px}
+    #keyBox{width:84%}
+    .links a{font-size:15px}
+  }
+</style>
+</head>
+<body>
+
+<div id="glowBG"></div>
+
+<div class="card" role="main">
+  <div class="avatar" aria-hidden="true"></div>
+
+  <div id="keyBox" title="Bấm để copy key">XXXXXXXXXX</div>
+
+  <div class="links" aria-label="Liên kết">
+    <a id="linkFb" href="https://facebook.com/anhyeuemnhamlun" target="_blank" rel="noopener">Facebook</a>
+    <a id="linkZalo" href="https://zalo.me/84763465951" target="_blank" rel="noopener">Zalo</a>
+    <a id="linkTg" href="https://t.me/tuanank209" target="_blank" rel="noopener">Telegram</a>
+    <a id="linkDc" href="https://discord.gg/fXKfhF3G4" target="_blank" rel="noopener">Discord</a>
+  </div>
+</div>
+
+<!-- Effects -->
+<div id="laserSweep"></div>
+<div id="smokeFX"></div>
+<div id="spotlight"></div>
+<div id="copyMsg">Đã copy key thành công!</div>
+
+<script>
+  // generate random 10-char key on load
+  function genKey(){ return Math.random().toString(36).substring(2,12).toUpperCase(); }
+  const keyBox = document.getElementById('keyBox');
+  keyBox.textContent = genKey();
+
+  // click to copy + sound + msg + particle burst
+  async function copyKey(){
+    const txt = keyBox.textContent;
+    try{
+      await navigator.clipboard.writeText(txt);
+    }catch(e){
+      // fallback
+      const ta = document.createElement('textarea'); ta.value = txt; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+
+    // play click sound (if allowed)
+    const audio = new Audio('https://cdnjs.cloudflare.com/ajax/libs/ion-sound/3.0.7/sounds/click.mp3');
+    audio.volume = 0.7;
+    audio.play().catch(()=>{});
+
+    // glow key and show message
+    keyBox.style.boxShadow = '0 0 30px #00ff9d';
+    const msg = document.getElementById('copyMsg');
+    msg.style.opacity = '1'; msg.style.bottom = '60px';
+    setTimeout(()=>{ msg.style.opacity = '0'; msg.style.bottom = '-60px'; },1400);
+
+    // particle burst
+    for(let i=0;i<14;i++){
+      const p = document.createElement('div');
+      p.style.position='fixed';
+      p.style.left=(window.innerWidth/2 + (Math.random()*220-110))+'px';
+      p.style.top=(window.innerHeight/2 + (Math.random()*120-60))+'px';
+      p.style.width='6px'; p.style.height='6px'; p.style.borderRadius='50%';
+      p.style.background='rgba(255,255,255,0.9)';
+      p.style.transform='translateY(0)';
+      p.style.zIndex=6;
+      p.style.opacity=1;
+      document.body.appendChild(p);
+      (function(el){
+        setTimeout(()=>{ el.style.transition='transform 700ms ease-out, opacity 700ms'; el.style.transform='translateY(-120px) scale(0.6)'; el.style.opacity=0; },10);
+        setTimeout(()=>el.remove(),900);
+      })(p);
+    }
+  }
+
+  keyBox.addEventListener('click', copyKey);
+
+  // spawn bar lights (club feel)
+  for(let i=0;i<9;i++){
+    const b = document.createElement('div'); b.className='bar-light';
+    b.style.top = Math.random()*100 + 'vh';
+    b.style.left = -200 + Math.random()*20 + 'px';
+    b.style.animationDelay = Math.random()*4 + 's';
+    b.style.zIndex = 1;
+    document.body.appendChild(b);
+  }
+
+  // neon pulses
+  for(let i=0;i<6;i++){
+    const n = document.createElement('div'); n.className='neonPulse';
+    n.style.left = Math.random()*100 + 'vw';
+    n.style.top = Math.random()*100 + 'vh';
+    n.style.animationDelay = Math.random()*4 + 's';
+    n.style.zIndex = 1;
+    document.body.appendChild(n);
+  }
+
+  // laser movement
+  (function animateLaser(){
+    const el = document.getElementById('laserSweep');
+    el.style.transform = 'translateX(-220px)';
+    el.style.transition = 'transform 3800ms linear';
+    setTimeout(()=>{ el.style.transform = 'translateX(140vw)'; },50);
+    setTimeout(animateLaser,4000);
+  })();
+
+  // spark particles for club feeling
+  for(let i=0;i<30;i++){
+    const s = document.createElement('div'); s.className='spark';
+    s.style.left = Math.random()*100 + 'vw';
+    s.style.top = (Math.random()*60 + 20) + 'vh';
+    s.style.animationDelay = Math.random()*3 + 's';
+    document.body.appendChild(s);
+    (function(el,delay){
+      setTimeout(()=>{ el.style.transition='transform 3000ms ease-in, opacity 3000ms'; el.style.transform='translateY(-80px)'; el.style.opacity=0; }, 2000* Math.random() + 200);
+      setTimeout(()=>el.remove(),5200);
+    })(s);
+  }
+
+  // ensure links open in new tab already via markup
+</script>
+
+</body>
+</html>

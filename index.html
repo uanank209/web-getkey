@@ -72,37 +72,22 @@ footer{margin-top:20px;text-align:center;color:rgba(230,238,248,0.45);font-size:
       KEY_TEXT = `TuanAnk-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
       document.getElementById('keyBox').textContent = KEY_TEXT;
     }
+
     generateKey();
 
-    async function copyKeyAndPlay() {
-      try {
-        await navigator.clipboard.writeText(KEY_TEXT);
-        btn.textContent = 'Đã copy! ✅';
-        btn.disabled = true;
-        setTimeout(()=>{btn.textContent='Lấy Key';btn.disabled=false},2200);
-      } catch (err) {
-        const t = document.createElement('textarea');
-        t.value = KEY_TEXT;
-        document.body.appendChild(t);
-        t.select();
-        try { document.execCommand('copy'); btn.textContent='Đã copy! ✅'; } catch(e){ alert('Không thể copy: ' + KEY_TEXT); }
-        document.body.removeChild(t);
-      }
-
-      audio.muted = false;
-      audio.play().catch(()=>{});
+    // Đọc key từ URL dạng /key=TuanAnk-XXXX
+    const path = window.location.pathname.replace('/', '');
+    if(path.startsWith('key=')){
+      KEY_TEXT = path.split('=')[1] || '';
+      document.getElementById('keyBox').textContent = KEY_TEXT;
+    }`;
+      document.getElementById('keyBox').textContent = KEY_TEXT;
+    }
+    // Nếu URL dạng /key=TuanAnk-XXXX
+    const path = window.location.pathname.replace('/', '');
+    if(path.startsWith('key=')){
+      KEY_TEXT = path.split('=')[1] || '';
+      document.getElementById('keyBox').textContent = KEY_TEXT;
     }
 
-    btn.addEventListener('click', copyKeyAndPlay);
-
-    toggleMusicBtn.addEventListener('click', ()=>{
-      if(audio.paused){ audio.play(); toggleMusicBtn.textContent='Tắt nhạc'; }
-      else { audio.pause(); toggleMusicBtn.textContent='Bật nhạc'; }
-    });
-
-    window.addEventListener('load', ()=>{
-      const tryPlay = () => audio.play().catch(()=> setTimeout(tryPlay, 500));
-      tryPlay();
-    });
-  </script></body>
-</html>
+    // Nếu URL có ?key=..., dùng key đó

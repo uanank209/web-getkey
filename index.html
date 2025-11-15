@@ -69,5 +69,8 @@ for(let i=0;i<40;i++){let b=document.createElement("div");b.className="vbar";b.s
 <script>
 cbtn.onclick=()=>{navigator.clipboard.writeText(k.textContent);cbtn.textContent="ĐÃ COPY!";setTimeout(()=>cbtn.textContent="COPY",900);} 
 </script>
+<script>
+document.getElementById("keyBox").textContent = window.generatedKey;
+</script>
 </body>
 </html>

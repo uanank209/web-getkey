@@ -1,93 +1,61 @@
-<!doctype html>
-
-<html lang="vi">
+<!DOCTYPE html><html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>GetKey - Tuấn Ank</title>
-  <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#7c3aed;--glass:rgba(255,255,255,0.04)}
-    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071025 0%,#0b1730 100%);color:#e6eef8}
-    .container{width:92%;max-width:920px;padding:28px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 8px 30px rgba(2,6,23,0.7);backdrop-filter:blur(6px)}
-    header{display:flex;gap:18px;align-items:center}
-    img.avatar{width:120px;height:120px;object-fit:cover;border-radius:12px;border:2px solid rgba(255,255,255,0.06)}
-    .meta{flex:1}
-    h1{margin:0;font-size:1.6rem;letter-spacing:0.6px}
-    p.lead{margin:6px 0 14px;color:rgba(230,238,248,0.78)}
-    .links{display:flex;gap:8px;flex-wrap:wrap}
-    .links a{padding:8px 12px;border-radius:10px;background:var(--glass);color:#dbeafe;text-decoration:none;font-weight:600;font-size:0.92rem}.actions{display:flex;gap:12px;align-items:center;margin-top:18px}
-button#copyKey{background:linear-gradient(90deg,#7c3aed,#4f46e5);border:none;padding:12px 18px;border-radius:12px;color:white;font-weight:700;cursor:pointer;font-size:1rem;box-shadow:0 8px 24px rgba(79,70,229,0.22)}
-button#copyKey:active{transform:translateY(1px)}
-
-.info{margin-top:18px;color:rgba(230,238,248,0.72);font-size:0.95rem}
-.hint{font-size:0.85rem;color:rgba(230,238,248,0.5)}
-
-footer{margin-top:20px;text-align:center;color:rgba(230,238,248,0.45);font-size:0.85rem}
-
-/* small responsive */
-@media(max-width:640px){header{flex-direction:column;align-items:flex-start}img.avatar{width:96px;height:96px}}
-
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GetKey - Tuấn Ank Ultra VIP</title>
+<style>
+/* BODY */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:#02030a;overflow:hidden;height:100vh;color:#fff;}
+/* BG GRADIENT */
+.bg-grad{position:fixed;inset:0;background:linear-gradient(120deg,#ff00c8,#4e00ff,#00d9ff,#00ffa2);background-size:400% 400%;animation:bgMove 14s infinite;filter:blur(60px);opacity:.32;z-index:0;}
+@keyframes bgMove{0%{background-position:0 50%}50%{background-position:100% 50%}100%{background-position:0 50%}}
+/* PARTICLES */
+.p{position:fixed;width:8px;height:8px;border-radius:50%;background:#ff00e1;filter:blur(4px) drop-shadow(0 0 6px #ff00ee);animation:up 8s linear infinite;z-index:2;}
+@keyframes up{0%{transform:translateY(100vh);opacity:0}50%{opacity:1}100%{transform:translateY(-20vh);opacity:0}}
+/* CARD */
+.card{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%;max-width:420px;padding:25px;background:rgba(255,255,255,0.06);border-radius:22px;border:1px solid #ffffff22;backdrop-filter:blur(16px);box-shadow:0 0 25px #ff00f533,0 0 45px #00eaff33;z-index:5;animation:float 4s ease-in-out infinite;}
+@keyframes float{0%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-53%)}100%{transform:translate(-50%,-50%)}}
+.card::before{content:"";position:absolute;inset:-2px;border-radius:22px;background:linear-gradient(90deg,#ff00ff,#7000ff,#00eaff);opacity:.5;filter:blur(12px);animation:spin 6s linear infinite;z-index:-1;}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+/* HEADER */
+.header{display:flex;align-items:center;gap:14px;}
+.avt{width:80px;height:80px;border-radius:50%;overflow:hidden;border:3px solid #ffffff55;box-shadow:0 0 25px #ff00e199,0 0 35px #00d9ffa2;}
+.avt img{width:100%;height:100%;object-fit:cover;}
+.title{font-size:26px;font-weight:700;}
+.sub{opacity:.75;font-size:13px;margin-top:-4px;}
+/* KEY */
+.kbox{margin-top:20px;display:flex;gap:10px;}
+.ktext{flex:1;padding:13px;background:rgba(255,255,255,0.12);border-radius:14px;font-size:14px;font-weight:600;border:1px solid #ffffff33;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.copy{padding:13px 16px;background:linear-gradient(90deg,#ff00f5,#6f00ff,#00c8ff);border:none;border-radius:14px;font-weight:700;color:#fff;box-shadow:0 0 15px #00c8ffaa;}
+/* LINKS */
+.links{margin-top:22px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.lbtn{padding:12px;background:rgba(255,255,255,0.14);border-radius:14px;text-align:center;font-weight:700;border:1px solid #ffffff33;color:#fff;text-decoration:none;}
+/* VISUALIZER */
+.viz{position:fixed;bottom:0;left:0;width:100%;height:140px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 4px;z-index:3;}
+.vbar{width:6px;background:linear-gradient(180deg,#ff00ea,#00eaff);border-radius:20px;animation:vAnim 1s ease infinite;filter:drop-shadow(0 0 8px #00eaff);}
+@keyframes vAnim{0%{height:10px}50%{height:90px}100%{height:10px}}
+</style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <img class="avatar" src="https://i.imgur.com/hpRPvKK.jpeg" alt="Ảnh">
-      <div class="meta">
-        <h1>Tuấn Ank</h1>
-        <p class="lead">Nhấn nút "Lấy Key" để sao chép key vào clipboard. Kèm nhạc nền và liên kết liên hệ.</p>
-        <div class="links">
-          <a href="https://facebook.com/anhyeuemnhamlun" target="_blank" rel="noopener">Facebook</a>
-          <a href="https://zalo.me/84763465951" target="_blank" rel="noopener">Zalo</a>
-          <a href="https://t.me/tuanank209" target="_blank" rel="noopener">Telegram</a>
-          <a href="https://discord.gg/fXKfhF3G4" target="_blank" rel="noopener">Discord</a>
-        </div>
-      </div>
-    </header><button id="toggleMusic" style="margin-top:14px;padding:10px 16px;border:none;border-radius:10px;background:rgba(255,255,255,0.07);color:#fff;font-weight:600;cursor:pointer;font-size:0.95rem;">Tắt nhạc</button>
-
-<div id="keyBox" style="margin-top:20px;padding:12px 16px;border-radius:10px;background:rgba(255,255,255,0.06);font-weight:700;font-size:1.05rem;letter-spacing:1px;word-break:break-all;user-select:text;"></div>
-
-<div class="actions">
-  <button id="copyKey" title="Bấm để copy key">Lấy Key</button>
-  <div class="hint">Key sẽ tự copy: <strong>Tuấn Ank</strong></div>
+<div class="bg-grad"></div>
+<div class="viz" id="viz"></div>
+<script>
+for(let i=0;i<40;i++){let b=document.createElement("div");b.className="vbar";b.style.animationDuration=(0.6+Math.random()*1.2)+"s";viz.appendChild(b);}for(let i=0;i<45;i++){let p=document.createElement("div");p.className="p";p.style.left=Math.random()*100+"%";p.style.animationDuration=(6+Math.random()*5)+"s";document.body.appendChild(p);}
+</script>
+<div class="card" id="card">
+<div class="header"><div class="avt"><img src="https://i.imgur.com/hpRPvKK.jpeg"></div><div><div class="title">GetKey - Tuấn Ank</div><div class="sub">Ultra VIP Neon Edition</div></div></div>
+<div class="kbox"><div class="ktext" id="k">tuanank.netlify.app/key=TuanAnk-XXXX</div><button class="copy" id="cbtn">COPY</button></div>
+<div class="links">
+<a class="lbtn" href="https://facebook.com/anhyeuemnhamlun">Facebook</a>
+<a class="lbtn" href="https://zalo.me/84763465951">Zalo</a>
+<a class="lbtn" href="https://t.me/tuanank209">Telegram</a>
+<a class="lbtn" href="https://discord.gg/fXKfhF3G4">Discord</a>
 </div>
-
-<div class="info">
-  <p>Link nhạc (Google Drive) đang được phát nền. Nếu trình duyệt chặn autoplay muted, hãy bấm nút "Lấy Key" để kích hoạt âm thanh bằng thao tác người dùng.</p>
 </div>
-
-<footer>© Thiết kế siêu xịn — Tự động copy và nhạc nền</footer>
-
-<!-- Audio element: dùng direct download link từ Google Drive (uc?export=download&id=...) -->
-<audio id="bgAudio" src="https://drive.google.com/uc?export=download&id=1QQAmKykKVPOtRXwXpRYe425D7Y7mKygf" loop autoplay></audio></audio>
-
-  </div>  <script>
-    let KEY_TEXT = '';
-    const btn = document.getElementById('copyKey');
-    const audio = document.getElementById('bgAudio');
-    const toggleMusicBtn = document.getElementById('toggleMusic');
-
-    function generateKey(){
-      KEY_TEXT = `TuanAnk-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-      document.getElementById('keyBox').textContent = KEY_TEXT;
-    }
-
-    generateKey();
-
-    // Đọc key từ URL dạng /key=TuanAnk-XXXX
-    const path = window.location.pathname.replace('/', '');
-    if(path.startsWith('key=')){
-      KEY_TEXT = path.split('=')[1] || '';
-      document.getElementById('keyBox').textContent = KEY_TEXT;
-    }`;
-      document.getElementById('keyBox').textContent = KEY_TEXT;
-    }
-    // Nếu URL dạng /key=TuanAnk-XXXX
-    const path = window.location.pathname.replace('/', '');
-    if(path.startsWith('key=')){
-      KEY_TEXT = path.split('=')[1] || '';
-      document.getElementById('keyBox').textContent = KEY_TEXT;
-    }
-
-    // Nếu URL có ?key=..., dùng key đó
+<audio id="music" autoplay loop><source src="https://docs.google.com/uc?export=download&id=1QQAmKykKVPOtRXwXpRYe425D7Y7mKygf"></audio>
+<script>
+cbtn.onclick=()=>{navigator.clipboard.writeText(k.textContent);cbtn.textContent="ĐÃ COPY!";setTimeout(()=>cbtn.textContent="COPY",900);} 
+</script>
+</body>
+</html>

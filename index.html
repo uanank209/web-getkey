@@ -1,216 +1,95 @@
 <!doctype html>
 <html lang="vi">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>GetKey — OMEGA INFINITY VIP</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GetKey — Tuấn Ank VIP</title>
 <style>
-:root{--cyan:#00f0ff;--magenta:#ff00c8;--bg:#020206}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:radial-gradient(circle at 30% 20%, #050019, #000);font-family:Inter,system-ui;color:#eaffff;overflow:hidden}
-
-/* layout */
-.container{position:relative;z-index:40;max-width:720px;margin:5vh auto;padding:26px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));backdrop-filter:blur(14px);border:1px solid rgba(0,255,255,0.06);box-shadow:0 20px 60px rgba(0,0,0,0.6)}
-.header{display:flex;align-items:center;gap:14px}
-.avatar{width:88px;height:88px;border-radius:50%;overflow:hidden;border:3px solid rgba(0,255,255,0.12);box-shadow:0 6px 30px rgba(0,255,255,0.06)}
-.title{font-size:18px;font-weight:800}
-.subtitle{font-size:12px;opacity:0.85;margin-top:6px}
-.row{display:flex;gap:12px;margin-top:14px;align-items:center}
-#keybox{flex:1;padding:14px;border-radius:12px;border:none;background:rgba(255,255,255,0.03);color:var(--cyan);font-weight:800;font-size:16px;text-align:center}
-.btn{padding:12px 14px;border-radius:12px;border:none;background:linear-gradient(90deg,var(--magenta),var(--cyan));color:#021314;font-weight:800;cursor:pointer}
-.meta{display:flex;gap:12px;justify-content:space-between;margin-top:12px}
-.timeCard{background:rgba(0,0,0,0.45);padding:12px;border-radius:12px;min-width:180px;text-align:center}
-.timeLabel{font-size:12px;opacity:0.85}
-.timeValue{font-weight:800;font-size:15px;margin-top:6px;color:var(--cyan)}
-.countdown{margin-top:12px;padding:12px;border-radius:12px;background:linear-gradient(90deg,rgba(255,0,200,0.04),rgba(0,255,255,0.02));font-weight:900;text-align:center;color:#ffef6a}
-.notify{text-align:center;margin-top:10px;font-weight:800}
-.controls{display:flex;gap:8px;margin-top:12px;align-items:center}
-.smallBtn{padding:8px 10px;border-radius:10px;border:none;background:rgba(255,255,255,0.03);color:#eaffff;cursor:pointer}
-.links{display:flex;gap:8px;margin-top:14px}
-.links a{flex:1;padding:10px;border-radius:10px;text-align:center;background:rgba(255,255,255,0.03);text-decoration:none;color:#eaffff;font-weight:700}
-canvas.bg{position:fixed;inset:0;z-index:0;filter:blur(8px);opacity:0.7}
-@media(max-width:520px){.row{flex-direction:column}.meta{flex-direction:column}}
+body{margin:0;background:#020206;color:#eaffff;font-family:sans-serif;overflow-x:hidden}
+.wrap{max-width:650px;margin:40px auto;background:rgba(255,255,255,0.05);
+border-radius:20px;padding:25px;backdrop-filter:blur(12px);border:1px solid rgba(0,255,255,0.1)}
+.avatar{width:90px;height:90px;border-radius:50%;overflow:hidden;
+border:3px solid rgba(0,255,255,0.3);box-shadow:0 0 18px rgba(0,255,255,0.3)}
+#keybox{width:100%;padding:14px;margin-top:15px;background:rgba(255,255,255,0.05);
+border:none;text-align:center;color:#00f0ff;font-size:20px;font-weight:800;border-radius:12px}
+.btn{margin-top:12px;width:100%;padding:13px;font-size:17px;font-weight:900;border:none;
+border-radius:12px;cursor:pointer;background:linear-gradient(90deg,#ff00c8,#00f0ff);color:#021314}
+.muteBtn{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.1)}
+.timebox{margin-top:14px;padding:12px;border-radius:12px;background:rgba(0,0,0,0.4);text-align:center}
+.notify{margin-top:12px;text-align:center;font-weight:900}
 </style>
 </head>
 <body>
-<canvas id="bg" class="bg"></canvas>
 
-<div class="container" id="app">
-  <div class="header">
-    <div class="avatar"><img src="https://i.imgur.com/hpRPvKK.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
-    <div style="flex:1">
-      <div class="title">GetKey — Tuấn Ank • OMEGA INFINITY VIP</div>
-      <div class="subtitle">Realtime • Key 24h • Audio VIP • Anti‑tamper</div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-size:12px;opacity:0.8">Status</div>
-      <div id="statusLight" style="margin-top:6px;padding:6px 10px;border-radius:16px;background:rgba(0,255,255,0.06);font-weight:800;color:var(--cyan)">ACTIVE</div>
-    </div>
-  </div>
-
-  <div class="row">
-    <input id="keybox" readonly />
-    <button id="copyBtn" class="btn">Copy Key</button>
-  </div>
-
-  <div class="meta">
-    <div class="timeCard">
-      <div class="timeLabel">Thời gian thực</div>
-      <div id="realTime" class="timeValue">--</div>
-    </div>
-    <div class="timeCard">
-      <div class="timeLabel">Hết hạn (24h từ tạo)</div>
-      <div id="expireTime" class="timeValue">--</div>
-    </div>
-  </div>
-
-  <div class="countdown" id="countdown">⏳ Key hết hạn sau: --</div>
-  <div class="notify" id="notify"></div>
-
-  <div class="controls">
-    <button id="play" class="smallBtn">Play</button>
-    <button id="pause" class="smallBtn">Pause</button>
-    <button id="volUp" class="smallBtn">Vol +</button>
-    <button id="volDown" class="smallBtn">Vol -</button>
-    <div style="flex:1;text-align:right;color:#cfefff;font-weight:700">Volume: <span id="vol">45%</span></div>
-  </div>
-
-  <div class="links">
-    <a href="https://facebook.com/anhyeuemnhamlun" target="_blank">Facebook</a>
-    <a href="https://zalo.me/84763465951" target="_blank">Zalo</a>
-    <a href="https://t.me/tuanank209" target="_blank">Telegram</a>
-    <a href="https://discord.gg/fXKfhF3G4" target="_blank">Discord</a>
-  </div>
+<div class="wrap">
+<div style="display:flex;align-items:center;gap:15px;">
+<img class="avatar" src="https://i.imgur.com/hpRPvKK.jpeg">
+<div>
+<div style="font-size:22px;font-weight:900;color:#00f0ff;text-shadow:0 0 12px #00f0ff">
+GetKey — Tuấn Ank VIP</div>
+<div style="opacity:.8;">Tự động phát nhạc • Key 24h</div>
+</div>
 </div>
 
-<!-- Audio sources: Dropbox (dl=1 for direct), Google Drive fallback -->
-<audio id="bgAudio" crossorigin="anonymous" loop>
-  <source src="https://www.dropbox.com/scl/fi/v9p55jeg7adr0udvjclc2/NONSTOP-2025-BAY-PH-NG-BASS-C-C-M-NH-NH-C-S-N-VINAHOUSE-DJ-MIXTAPE-2025-NH-C-REMIX-C-C-M-NH-P3-Mee-Remix-youtube.mp3?dl=1" type="audio/mpeg">
-  <source src="https://docs.google.com/uc?export=download&id=1QQAmKykKVPOtRXwXpRYe425D7Y7mKygf" type="audio/mpeg">
+<input id="keybox" readonly>
+
+<button id="copyBtn" class="btn">Copy Key</button>
+<button id="musicBtn" class="btn muteBtn">🔊 Bật Nhạc</button>
+
+<div class="timebox"><div>⏳ Thời gian thực:</div><b id="realTime">--</b></div>
+<div class="timebox"><div>⌚ Hết hạn (24h):</div><b id="expireTime">--</b></div>
+<div class="timebox"><div>🔥 Còn lại:</div><b id="countDown">--</b></div>
+
+<div class="notify" id="notify"></div>
+</div>
+
+<audio id="bgAudio" loop muted>
+<source src="assets/audio/music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// Background animated rings
-const bg = document.getElementById('bg'), bctx = bg.getContext('2d');
-function resize(){ bg.width = innerWidth; bg.height = innerHeight; } resize();
-window.addEventListener('resize', resize);
-let tt = 0;
-function draw(){ tt += 0.01; bctx.clearRect(0,0,bg.width,bg.height);
-  const cx = bg.width/2, cy = bg.height/2;
-  for(let i=0;i<6;i++){
-    bctx.beginPath();
-    bctx.arc(cx, cy, 120 + i*60 + Math.sin(tt + i)*20, 0, Math.PI*2);
-    bctx.strokeStyle = `rgba(${30+i*20},0,${180+i*10},${0.03 + i*0.01})`;
-    bctx.lineWidth = 2;
-    bctx.stroke();
-  }
-  requestAnimationFrame(draw);
-}
-draw();
+setTimeout(()=>{let a=document.getElementById('bgAudio');a.muted=false;a.volume=1.0;
+a.play().catch(()=>{});},500);
 
-// Key logic: prefer URL key, else saved key; expiry 24h
-const params = new URLSearchParams(location.search);
-const urlKey = params.get('key');
-const LS = localStorage;
-const KEY = 'omg_key_vip';
-const EXP = 'omg_exp_vip';
-function gen(){ const letters='ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s=''; for(let i=0;i<4;i++) s+=letters[Math.floor(Math.random()*letters.length)]; return 'TuanAnk-'+s; }
-const pattern = /^TuanAnk-[A-Z0-9]{4}$/;
-let key = LS.getItem(KEY);
-let expire = parseInt(LS.getItem(EXP)||'0');
+const KEY='vip_key',EXP='vip_exp';
+function genKey(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';
+for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
+return 'TuanAnk-'+s;}
 
-if(urlKey && pattern.test(urlKey)){
-  key = urlKey;
-  expire = Date.now() + 24*3600000;
-  LS.setItem(KEY,key); LS.setItem(EXP, expire);
-  document.getElementById('notify').textContent = '✔ Key hợp lệ (từ URL)'; document.getElementById('notify').style.color = '#00ff88';
-} else {
-  if(!key || Date.now() > expire){ key = gen(); expire = Date.now() + 24*3600000; LS.setItem(KEY,key); LS.setItem(EXP, expire); document.getElementById('notify').textContent = 'Key mới đã cấp'; document.getElementById('notify').style.color='#00f0ff'; }
-}
-const keybox = document.getElementById('keybox'); keybox.value = key;
-document.getElementById('expireTime').textContent = new Date(expire).toLocaleString('vi-VN');
+let k=localStorage.getItem(KEY),e=parseInt(localStorage.getItem(EXP)||0);
+if(!k||Date.now()>e){k=genKey();e=Date.now()+24*3600*1000;
+localStorage.setItem(KEY,k);localStorage.setItem(EXP,e);}
+document.getElementById('keybox').value=k;
+document.getElementById('expireTime').innerText=new Date(e).toLocaleString('vi-VN');
 
-// Real-time + countdown
-function tick(){
-  const now = new Date(); document.getElementById('realTime').textContent = now.toLocaleString('vi-VN');
-  const diff = expire - Date.now();
-  const cd = document.getElementById('countdown');
-  if(diff <= 0){ cd.textContent = '⛔ Key đã hết hạn'; cd.style.color = '#ff4d7a'; document.getElementById('notify').textContent='Key đã hết hạn'; document.getElementById('notify').style.color='#ff4d7a'; stopMusic(); playAlert('expired'); return; }
-  const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-  cd.textContent = `⏳ Key hết hạn sau: ${h}h ${m}m ${s}s`;
-  if(diff < 60000) cd.style.color = '#ffea00';
-}
-setInterval(tick,1000); tick();
+setInterval(()=>{let now=new Date();
+document.getElementById('realTime').innerText=now.toLocaleString('vi-VN');
+let d=e-Date.now();if(d<=0){document.getElementById('countDown').innerText="Hết hạn";return;}
+let h=Math.floor(d/3600000),m=Math.floor((d%3600000)/60000),
+s=Math.floor((d%60000)/1000);
+document.getElementById('countDown').innerText=`${h}h ${m}m ${s}s`;
+},1000);
 
-// Audio + analyser + controls
-const bgAudio = document.getElementById('bgAudio');
-let audioCtx, analyser, dataArr, srcNode;
-let volume = 0.45; bgAudio.volume = volume; document.getElementById('vol').textContent = Math.round(volume*100) + '%';
+function copyText(text){
+if(navigator.clipboard&&window.isSecureContext){
+ return navigator.clipboard.writeText(text);
+}else{
+ let ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);
+ ta.select();document.execCommand('copy');document.body.removeChild(ta);
+ return Promise.resolve();
+}}
 
-async function initAudio(){
-  if(audioCtx) return;
-  try{
-    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-    await audioCtx.resume();
-    srcNode = audioCtx.createMediaElementSource(bgAudio);
-    analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
-    srcNode.connect(analyser); analyser.connect(audioCtx.destination);
-    dataArr = new Uint8Array(analyser.frequencyBinCount);
-    requestAnimationFrame(reactive);
-  }catch(e){ console.warn(e); }
-}
-function playMusic(){ initAudio(); bgAudio.play().catch(()=>{}); }
-function stopMusic(){ try{ bgAudio.pause(); }catch(e){} }
-document.getElementById('play').addEventListener('click', playMusic);
-document.getElementById('pause').addEventListener('click', stopMusic);
-document.getElementById('volUp').addEventListener('click', ()=>{ volume = Math.min(1, volume+0.05); bgAudio.volume = volume; document.getElementById('vol').textContent = Math.round(volume*100)+'%'; });
-document.getElementById('volDown').addEventListener('click', ()=>{ volume = Math.max(0, volume-0.05); bgAudio.volume = volume; document.getElementById('vol').textContent = Math.round(volume*100)+'%'; });
+document.getElementById('copyBtn').onclick=()=>{
+copyText(k).then(()=>{
+let n=document.getElementById('notify');n.innerText='✔ Đã copy!';n.style.color='#00f0ff';
+});};
 
-function reactive(){
-  if(!analyser) return;
-  analyser.getByteFrequencyData(dataArr);
-  const bass = dataArr.slice(0,8).reduce((a,b)=>a+b,0)/8;
-  document.getElementById('app').style.boxShadow = `0 0 ${Math.min(80, bass/4)}px rgba(255,0,200,0.06)`;
-  requestAnimationFrame(reactive);
-}
-
-// Alerts
-function playAlert(type){
-  try{
-    if(!audioCtx) initAudio();
-    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-    if(type==='warning'){ o.frequency.value = 880; g.gain.value = 0.03; o.type='sine'; o.connect(g); g.connect(audioCtx.destination); o.start(); setTimeout(()=>{ o.frequency.value = 660; },120); setTimeout(()=>{ o.stop(); },650); }
-    else if(type==='expired'){ o.frequency.value = 220; g.gain.value = 0.06; o.type='sawtooth'; o.connect(g); g.connect(audioCtx.destination); o.start(); setTimeout(()=>{ o.stop(); },1200); }
-    else if(type==='copy'){ o.frequency.value = 1200; g.gain.value = 0.02; o.type='triangle'; o.connect(g); g.connect(audioCtx.destination); o.start(); setTimeout(()=>{ o.stop(); },140); }
-  }catch(e){}
-}
-
-// copy with limits & effects
-const copyBtn = document.getElementById('copyBtn');
-let copies = JSON.parse(LS.getItem('copy_vip')||'[]');
-function recordCopy(){ copies = copies.filter(t=>Date.now()-t < 10*60*1000); copies.push(Date.now()); LS.setItem('copy_vip', JSON.stringify(copies)); }
-function canCopy(){ copies = copies.filter(t=>Date.now()-t < 10*60*1000); return copies.length < 20; }
-copyBtn.addEventListener('click', ()=>{
-  if(!canCopy()){ document.getElementById('notify').textContent='Bạn copy quá nhiều, thử lại sau'; document.getElementById('notify').style.color='#ffbf00'; playAlert('warning'); return; }
-  navigator.clipboard.writeText(keybox.value).then(()=>{ recordCopy(); document.getElementById('notify').textContent='Đã copy'; document.getElementById('notify').style.color='#00f0ff'; playAlert('copy'); pulseFlash(); });
-});
-
-// pulse flash on copy
-function pulseFlash(){
-  const el = document.createElement('div');
-  el.style.position='fixed'; el.style.left=0; el.style.top=0; el.style.right=0; el.style.bottom=0;
-  el.style.background='radial-gradient(circle at center, rgba(255,0,200,0.12), rgba(0,255,255,0.02))';
-  el.style.pointerEvents='none'; el.style.zIndex=9999; document.body.appendChild(el);
-  el.animate([{opacity:1},{opacity:0}],{duration:500, easing:'ease-out'}); setTimeout(()=>el.remove(),600);
-}
-
-// warning loop near expiry
-let warnStarted=false;
-setInterval(()=>{ const diff = expire - Date.now(); if(diff>0 && diff < 2*60*1000 && !warnStarted){ warnStarted=true; const iv = setInterval(()=>{ playAlert('warning'); }, 4000); setTimeout(()=>{ clearInterval(iv); warnStarted=false; }, 2*60*1000); } }, 8000);
-
-// auto-init audio on gesture
-window.addEventListener('click', ()=>{ initAudio(); if(bgAudio.paused) bgAudio.play().catch(()=>{}); }, {once:true});
+const audio=document.getElementById("bgAudio");
+document.getElementById("musicBtn").onclick=()=>{
+ if(audio.paused){audio.play();musicBtn.innerText="🔇 Tắt Nhạc";}
+ else{audio.pause();musicBtn.innerText="🔊 Bật Nhạc";}
+};
 </script>
+
 </body>
 </html>

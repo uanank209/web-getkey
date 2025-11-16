@@ -1,95 +1,476 @@
 <!doctype html>
 <html lang="vi">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GetKey — Tuấn Ank VIP</title>
-<style>
-body{margin:0;background:#020206;color:#eaffff;font-family:sans-serif;overflow-x:hidden}
-.wrap{max-width:650px;margin:40px auto;background:rgba(255,255,255,0.05);
-border-radius:20px;padding:25px;backdrop-filter:blur(12px);border:1px solid rgba(0,255,255,0.1)}
-.avatar{width:90px;height:90px;border-radius:50%;overflow:hidden;
-border:3px solid rgba(0,255,255,0.3);box-shadow:0 0 18px rgba(0,255,255,0.3)}
-#keybox{width:100%;padding:14px;margin-top:15px;background:rgba(255,255,255,0.05);
-border:none;text-align:center;color:#00f0ff;font-size:20px;font-weight:800;border-radius:12px}
-.btn{margin-top:12px;width:100%;padding:13px;font-size:17px;font-weight:900;border:none;
-border-radius:12px;cursor:pointer;background:linear-gradient(90deg,#ff00c8,#00f0ff);color:#021314}
-.muteBtn{background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.1)}
-.timebox{margin-top:14px;padding:12px;border-radius:12px;background:rgba(0,0,0,0.4);text-align:center}
-.notify{margin-top:12px;text-align:center;font-weight:900}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GetKey — OMEGA INFINITY ULTRA VIP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#04020a;
+      --neon1:#7C00FF;
+      --neon2:#FF00C8;
+      --cyan:#00F0FF;
+      --accent:#ffef6a;
+      --glass: rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:#eaffff;background:var(--bg);-webkit-font-smoothing:antialiased;overflow:hidden}
+
+    /* canvas layers */
+    canvas#stage, canvas#viz { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    /* container */
+    .container{
+      position:relative;
+      z-index:40;
+      max-width:980px;
+      margin:6vh auto;
+      padding:28px;
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(124,0,255,0.05);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    }
+
+    /* header */
+    .header{display:flex;gap:18px;align-items:center}
+    .avatar-vip{
+      width:132px;height:132px;border-radius:50%;overflow:hidden;position:relative;
+      box-shadow:0 20px 60px rgba(124,0,255,0.16);
+    }
+    .avatar-vip img{width:100%;height:100%;object-fit:cover;object-position:center;border-radius:50%}
+    .avatar-vip::before{
+      content:"";position:absolute;inset:-6px;border-radius:50%;
+      background:conic-gradient(from 0deg,#00f0ff, #ff00c8, #ffef6a, #00f0ff);
+      filter: blur(10px); mix-blend-mode:screen; opacity:0.9; animation:spin 6s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .titleBlock{flex:1}
+    .title{font-weight:900;font-size:22px;color:var(--neon1);text-shadow:0 0 20px rgba(124,0,255,0.25)}
+    .subtitle{opacity:.9;margin-top:6px;font-size:13px}
+
+    /* card */
+    .card{margin-top:18px;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.34));border:1px solid rgba(255,255,255,0.02)}
+
+    /* key box */
+    #keybox{width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(90deg, rgba(0,0,0,0.45), rgba(255,255,255,0.01));color:var(--cyan);font-weight:900;font-size:20px;text-align:center}
+
+    /* buttons */
+    .row{display:flex;gap:12px;margin-top:14px;align-items:center}
+    .btn{flex:1;padding:12px;border-radius:12px;border:none;font-weight:900;cursor:pointer;background:linear-gradient(90deg,var(--neon2),var(--neon1));color:#050707;box-shadow:0 14px 40px rgba(124,0,255,0.12)}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#eaffff}
+    .btn.small{flex:unset;padding:8px 10px;font-size:14px}
+
+    .meta{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+    .meta .box{flex:1;min-width:160px;background:rgba(0,0,0,0.45);padding:12px;border-radius:10px;text-align:center}
+    .meta .label{font-size:12px;opacity:0.8}
+    .meta .value{font-weight:900;margin-top:6px;color:var(--cyan)}
+
+    .count{margin-top:12px;padding:12px;border-radius:12px;background:linear-gradient(90deg,rgba(255,0,200,0.04),rgba(0,255,255,0.03));text-align:center;font-weight:900;color:var(--accent)}
+
+    .links{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+    .links a{padding:10px 12px;border-radius:10px;text-decoration:none;background:rgba(255,255,255,0.03);color:#fff;font-weight:800}
+
+    .notify{margin-top:12px;text-align:center;font-weight:900;font-size:15px}
+
+    /* popup */
+    .popup{position:fixed;left:50%;top:18%;transform:translateX(-50%);z-index:120;min-width:320px;background:linear-gradient(180deg,#0b0210,#05020a);padding:14px;border-radius:12px;border:1px solid rgba(255,0,200,0.06);box-shadow:0 30px 80px rgba(0,0,0,0.6);display:none}
+    .popup.show{display:block;animation:pop .28s ease}
+    @keyframes pop{from{transform:translateX(-50%) translateY(-10px) scale(.98);opacity:0}to{transform:translateX(-50%) translateY(0) scale(1);opacity:1}}
+
+    /* responsive */
+    @media(max-width:820px){
+      .header{flex-direction:row}
+      .row{flex-direction:column}
+      .meta{flex-direction:column}
+    }
+
+    /* small UI polish */
+    .glitch{animation:glitch 0.35s steps(2, end) infinite}
+    @keyframes glitch{0%{transform:translateX(0)}25%{transform:translateX(-2px)}50%{transform:translateX(2px)}75%{transform:translateX(-1px)}100%{transform:translateX(0)}}
+  </style>
 </head>
 <body>
+  <canvas id="stage"></canvas>
+  <canvas id="viz"></canvas>
 
-<div class="wrap">
-<div style="display:flex;align-items:center;gap:15px;">
-<img class="avatar" src="https://i.imgur.com/hpRPvKK.jpeg">
-<div>
-<div style="font-size:22px;font-weight:900;color:#00f0ff;text-shadow:0 0 12px #00f0ff">
-GetKey — Tuấn Ank VIP</div>
-<div style="opacity:.8;">Tự động phát nhạc • Key 24h</div>
-</div>
-</div>
+  <div class="container" role="main">
+    <div class="header">
+      <div class="avatar-vip"><img src="https://i.imgur.com/hpRPvKK.jpeg" alt="avatar"></div>
+      <div class="titleBlock">
+        <div class="title">GetKey — TUẤN ANK • OMEGA INFINITY</div>
+        <div class="subtitle">Ultra VIP • Live Visuals • 24h Expiry • 1-time use</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:12px;opacity:.85">Status</div>
+        <div id="status" style="margin-top:8px;padding:6px 10px;border-radius:14px;background:rgba(0,255,255,0.06);font-weight:900;color:var(--cyan)">ACTIVE</div>
+      </div>
+    </div>
 
-<input id="keybox" readonly>
+    <div class="card">
+      <input id="keybox" readonly placeholder="TuanAnk-XXXX">
+      <div class="row">
+        <button id="copyBtn" class="btn">📋 Copy Key</button>
+        <button id="musicBtn" class="btn ghost">🔊 Bật Nhạc</button>
+        <button id="toggleViz" class="btn small ghost">Visualizer</button>
+      </div>
 
-<button id="copyBtn" class="btn">Copy Key</button>
-<button id="musicBtn" class="btn muteBtn">🔊 Bật Nhạc</button>
+      <div class="meta">
+        <div class="box">
+          <div class="label">Thời gian thực</div>
+          <div id="realTime" class="value">--</div>
+        </div>
+        <div class="box">
+          <div class="label">Hết hạn (24h)</div>
+          <div id="expireTime" class="value">--</div>
+        </div>
+        <div class="box">
+          <div class="label">Thiết bị</div>
+          <div id="devId" class="value">--</div>
+        </div>
+      </div>
 
-<div class="timebox"><div>⏳ Thời gian thực:</div><b id="realTime">--</b></div>
-<div class="timebox"><div>⌚ Hết hạn (24h):</div><b id="expireTime">--</b></div>
-<div class="timebox"><div>🔥 Còn lại:</div><b id="countDown">--</b></div>
+      <div id="countdown" class="count">⏳ Key hết hạn sau: --</div>
+      <div id="notify" class="notify"></div>
 
-<div class="notify" id="notify"></div>
-</div>
+      <div class="links">
+        <a href="https://facebook.com/anhyeuemnhamlun" target="_blank">Facebook</a>
+        <a href="https://zalo.me/84763465951" target="_blank">Zalo</a>
+        <a href="https://t.me/tuanank209" target="_blank">Telegram</a>
+        <a href="https://discord.gg/fXKfhF3G4" target="_blank">Discord</a>
+      </div>
+    </div>
+  </div>
 
-<audio id="bgAudio" loop muted>
-<source src="assets/audio/music.mp3" type="audio/mpeg">
-</audio>
+  <div id="popup" class="popup" role="dialog" aria-modal="true"></div>
 
-<script>
-setTimeout(()=>{let a=document.getElementById('bgAudio');a.muted=false;a.volume=1.0;
-a.play().catch(()=>{});},500);
+  <!-- audio (local asset) -->
+  <audio id="bgAudio" loop crossorigin="anonymous">
+    <source src="assets/audio/tuanank.mp3" type="audio/mpeg">
+  </audio>
 
-const KEY='vip_key',EXP='vip_exp';
-function genKey(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';
-for(let i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
-return 'TuanAnk-'+s;}
+  <script>
+  /* ----------------- Visual stage: particles + lasers ----------------- */
+  const stage = document.getElementById('stage'), viz = document.getElementById('viz');
+  const sctx = stage.getContext('2d'), vctx = viz.getContext('2d');
+  function onResize(){ [stage,viz].forEach(c=>{c.width = innerWidth; c.height = innerHeight;}); }
+  window.addEventListener('resize', onResize); onResize();
 
-let k=localStorage.getItem(KEY),e=parseInt(localStorage.getItem(EXP)||0);
-if(!k||Date.now()>e){k=genKey();e=Date.now()+24*3600*1000;
-localStorage.setItem(KEY,k);localStorage.setItem(EXP,e);}
-document.getElementById('keybox').value=k;
-document.getElementById('expireTime').innerText=new Date(e).toLocaleString('vi-VN');
+  let t = 0;
+  const particles = [];
+  for(let i=0;i<160;i++){
+    particles.push({
+      x: Math.random()*innerWidth,
+      y: Math.random()*innerHeight,
+      r: 0.6 + Math.random()*3,
+      vx: (Math.random()-0.5)*0.5,
+      vy: (Math.random()-0.5)*0.5,
+      hue: Math.random()*360
+    });
+  }
 
-setInterval(()=>{let now=new Date();
-document.getElementById('realTime').innerText=now.toLocaleString('vi-VN');
-let d=e-Date.now();if(d<=0){document.getElementById('countDown').innerText="Hết hạn";return;}
-let h=Math.floor(d/3600000),m=Math.floor((d%3600000)/60000),
-s=Math.floor((d%60000)/1000);
-document.getElementById('countDown').innerText=`${h}h ${m}m ${s}s`;
-},1000);
+  function drawStage(){
+    t += 0.01;
+    // soft gradient overlay
+    sctx.clearRect(0,0,stage.width,stage.height);
+    const g = sctx.createLinearGradient(0,0,stage.width,stage.height);
+    g.addColorStop(0, 'rgba(124,0,255,0.02)');
+    g.addColorStop(0.5, 'rgba(255,0,200,0.015)');
+    g.addColorStop(1, 'rgba(0,240,255,0.02)');
+    sctx.fillStyle = g; sctx.fillRect(0,0,stage.width,stage.height);
 
-function copyText(text){
-if(navigator.clipboard&&window.isSecureContext){
- return navigator.clipboard.writeText(text);
-}else{
- let ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);
- ta.select();document.execCommand('copy');document.body.removeChild(ta);
- return Promise.resolve();
-}}
+    // particles
+    for(const p of particles){
+      p.x += p.vx + Math.sin(t + p.hue)*0.2;
+      p.y += p.vy + Math.cos(t + p.hue)*0.2;
+      if(p.x < -20) p.x = stage.width + 20;
+      if(p.x > stage.width + 20) p.x = -20;
+      if(p.y < -20) p.y = stage.height + 20;
+      if(p.y > stage.height + 20) p.y = -20;
+      sctx.beginPath();
+      sctx.fillStyle = `hsla(${p.hue},80%,60%,0.10)`;
+      sctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      sctx.fill();
+    }
 
-document.getElementById('copyBtn').onclick=()=>{
-copyText(k).then(()=>{
-let n=document.getElementById('notify');n.innerText='✔ Đã copy!';n.style.color='#00f0ff';
-});};
+    // lasers
+    for(let i=0;i<5;i++){
+      const y = (Math.sin(t*1.2 + i)*0.5 + 0.5)*(stage.height*0.6) + stage.height*0.15;
+      sctx.fillStyle = `rgba(255,0,200,${0.03 + i*0.008})`;
+      sctx.fillRect(0, y, stage.width, 1 + i*0.6);
+    }
 
-const audio=document.getElementById("bgAudio");
-document.getElementById("musicBtn").onclick=()=>{
- if(audio.paused){audio.play();musicBtn.innerText="🔇 Tắt Nhạc";}
- else{audio.pause();musicBtn.innerText="🔊 Bật Nhạc";}
-};
-</script>
+    requestAnimationFrame(drawStage);
+  }
+  drawStage();
 
+  /* ----------------- Audio & Visualizer ----------------- */
+  const audio = document.getElementById('bgAudio');
+  let audioCtx, analyser, dataArr, sourceNode;
+  function initAudio(){
+    if(audioCtx) return;
+    try{
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      sourceNode = audioCtx.createMediaElementSource(audio);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      sourceNode.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      dataArr = new Uint8Array(analyser.frequencyBinCount);
+      visualLoop();
+    }catch(e){ console.warn('Audio init failed', e); }
+  }
+
+  let vizActive = true;
+  function visualLoop(){
+    if(!analyser){ requestAnimationFrame(visualLoop); return; }
+    analyser.getByteFrequencyData(dataArr);
+    vctx.clearRect(0,0,viz.width,viz.height);
+    if(!vizActive){ requestAnimationFrame(visualLoop); return; }
+    const nb = 64;
+    const w = viz.width / nb;
+    for(let i=0;i<nb;i++){
+      const val = dataArr[i + 8];
+      const h = (val/255) * (viz.height * 0.36);
+      const x = i * w;
+      const hue = 260 - i*3;
+      vctx.fillStyle = `hsl(${hue} 100% ${50 - val/6}%)`;
+      vctx.fillRect(x, viz.height - h - 30, w*0.78, h);
+    }
+    // center pulse
+    const bass = dataArr.slice(0,8).reduce((a,b)=>a+b,0)/8;
+    const size = Math.min(160 + bass, 720);
+    const cx = viz.width/2, cy = viz.height/2;
+    const gr = vctx.createRadialGradient(cx, cy, 0, cx, cy, size);
+    gr.addColorStop(0, `rgba(255,0,200,${Math.min(0.24, bass/900)})`);
+    gr.addColorStop(1, 'rgba(0,0,0,0)');
+    vctx.fillStyle = gr; vctx.fillRect(0,0,viz.width,viz.height);
+
+    requestAnimationFrame(visualLoop);
+  }
+
+  /* ----------------- Autoplay bypass & start ----------------- */
+  setTimeout(async ()=>{
+    try{
+      initAudio();
+      audio.muted = false;
+      await audio.play().catch(()=>{});
+      document.getElementById('musicBtn').textContent = '🔇 Tắt Nhạc';
+    }catch(e){ console.warn('autoplay blocked', e); }
+  }, 450);
+
+  /* ----------------- KEY system ----------------- */
+  const params = new URLSearchParams(location.search);
+  const urlKey = params.get('key');
+  const LS = localStorage;
+  const KEY_NAME = 'omega_key_infty';
+  const EXP_NAME = 'omega_exp_infty';
+  const USED_NAME = 'omega_used_infty';
+  const DEV_NAME = 'omega_dev_infty';
+
+  function genKey(){
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let s = '';
+    for(let i=0;i<4;i++) s += chars[Math.floor(Math.random()*chars.length)];
+    return 'TuanAnk-' + s;
+  }
+
+  function getDeviceId(){
+    let id = LS.getItem(DEV_NAME);
+    if(!id){ id = 'dev-' + Math.random().toString(36).slice(2,10); LS.setItem(DEV_NAME, id); }
+    return id;
+  }
+  const deviceId = getDeviceId();
+  document.getElementById('devId').textContent = deviceId;
+
+  const validPattern = /^TuanAnk-[A-Z0-9]{4}$/i;
+  let stored = LS.getItem(KEY_NAME);
+  let expireAt = parseInt(LS.getItem(EXP_NAME) || '0');
+  let used = LS.getItem(USED_NAME) === '1';
+
+  if(urlKey){
+    const k = urlKey.toUpperCase();
+    if(validPattern.test(k)){
+      stored = k;
+      expireAt = Date.now() + 24*3600000;
+      used = false;
+      LS.setItem(KEY_NAME, stored); LS.setItem(EXP_NAME, expireAt); LS.setItem(USED_NAME, '0');
+      showNotify('✔ Key hợp lệ (lấy từ URL)', true);
+    } else {
+      showNotify('✖ Key không hợp lệ (định dạng)', false, true);
+    }
+  } else {
+    if(!stored || Date.now() > expireAt){
+      stored = genKey();
+      expireAt = Date.now() + 24*3600000;
+      used = false;
+      LS.setItem(KEY_NAME, stored); LS.setItem(EXP_NAME, expireAt); LS.setItem(USED_NAME, '0');
+      showNotify('✨ Key mới đã cấp', true);
+    } else {
+      showNotify('🔁 Key đang hoạt động', true);
+    }
+  }
+
+  document.getElementById('keybox').value = stored;
+  document.getElementById('expireTime').textContent = new Date(expireAt).toLocaleString('vi-VN');
+
+  async function sha256hex(text){
+    const enc = new TextEncoder();
+    const data = enc.encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  (async ()=>{ const fp = await sha256hex(stored + '|' + deviceId); LS.setItem('omega_fp', fp.slice(0,20)); })();
+
+  /* ----------------- Time & countdown ----------------- */
+  function updateTime(){
+    const now = new Date();
+    document.getElementById('realTime').textContent = now.toLocaleString('vi-VN');
+    const diff = expireAt - Date.now();
+    const cdEl = document.getElementById('countdown');
+    if(diff <= 0){
+      cdEl.textContent = '⛔ Key đã hết hạn';
+      cdEl.style.color = '#ff4d6a';
+      showNotify('⛔ Key đã hết hạn', false, true);
+      playAlert('expired');
+      try{ audio.pause(); }catch(e){}
+      return;
+    }
+    const h = Math.floor(diff/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    cdEl.textContent = `⏳ Key hết hạn sau: ${h}h ${m}m ${s}s`;
+    if(diff < 60000) cdEl.style.color = '#ffef6a';
+  }
+  setInterval(updateTime, 1000); updateTime();
+
+  /* ----------------- Notifications & popup ----------------- */
+  const popup = document.getElementById('popup');
+  function showNotify(msg, ok=true, glitch=false){
+    const n = document.getElementById('notify');
+    n.textContent = msg;
+    n.style.color = ok ? '#7dffb0' : '#ff8aa0';
+    if(glitch){ n.classList.add('glitch'); setTimeout(()=>n.classList.remove('glitch'), 2200); }
+    setTimeout(()=>{ n.textContent = ''; }, 7000);
+  }
+  function showPopup(html){ popup.innerHTML = html; popup.classList.add('show'); setTimeout(()=>popup.classList.remove('show'), 9000); }
+
+  /* ----------------- Copy behavior (robust) ----------------- */
+  const copyBtn = document.getElementById('copyBtn');
+  let copyCount = parseInt(LS.getItem('omega_copy_count') || '0');
+  copyBtn.addEventListener('click', ()=>{
+    if(copyCount >= 50){ showNotify('Bạn copy quá nhiều, thử lại sau', false); playAlert('warning'); return; }
+    copyText(stored).then(()=>{
+      copyCount++; LS.setItem('omega_copy_count', copyCount);
+      showNotify('✔ Đã copy vào clipboard', true);
+      playAlert('copy');
+      // visual flash
+      pulseFlash();
+      // mark used? keep one-time behaviour if desired:
+      // LS.setItem(USED_NAME, '1'); document.getElementById('status').textContent = 'USED';
+    }).catch(()=>{ showNotify('✖ Không thể copy (trình duyệt chặn)', false); });
+  });
+
+  function copyText(text){
+    if(navigator.clipboard && window.isSecureContext){
+      return navigator.clipboard.writeText(text);
+    } else {
+      return new Promise((res, rej)=>{
+        const ta = document.createElement('textarea'); ta.value = text;
+        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta); ta.select();
+        try{ document.execCommand('copy'); document.body.removeChild(ta); res(); }catch(e){ document.body.removeChild(ta); rej(e); }
+      });
+    }
+  }
+
+  /* ----------------- Audio controls & alerts ----------------- */
+  function playAlert(type){
+    try{
+      if(!audioCtx) initAudio();
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      if(type==='copy'){ o.frequency.value=1200; g.gain.value=0.02; o.type='triangle'; }
+      else if(type==='warning'){ o.frequency.value=880; g.gain.value=0.03; o.type='sine'; }
+      else if(type==='expired'){ o.frequency.value=220; g.gain.value=0.06; o.type='sawtooth'; }
+      o.connect(g); g.connect(audioCtx.destination); o.start(); setTimeout(()=>o.stop(), 160);
+    }catch(e){}
+  }
+
+  function pulseFlash(){
+    const el = document.createElement('div');
+    el.style.position = 'fixed'; el.style.left=0; el.style.top=0; el.style.right=0; el.style.bottom=0;
+    el.style.zIndex=90; el.style.pointerEvents='none';
+    el.style.background = 'radial-gradient(circle at center, rgba(255,0,200,0.08), rgba(0,240,255,0.02))';
+    document.body.appendChild(el); setTimeout(()=>el.remove(), 420);
+  }
+
+  /* ----------------- Visualizer toggle & interaction ----------------- */
+  document.getElementById('toggleViz').addEventListener('click', ()=>{
+    vizActive = !vizActive;
+    document.getElementById('toggleViz').textContent = vizActive ? 'Visualizer' : 'Visualizer OFF';
+  });
+
+  document.getElementById('musicBtn').addEventListener('click', async ()=>{
+    try{
+      if(audio.paused){ await initAudio(); await audio.play(); document.getElementById('musicBtn').textContent = '🔇 Tắt Nhạc'; }
+      else { audio.pause(); document.getElementById('musicBtn').textContent = '🔊 Bật Nhạc'; }
+    }catch(e){ console.warn(e); }
+  });
+
+  /* ----------------- Start visualizer loop when audio ready ----------------- */
+  async function initAudio(){
+    if(audioCtx) return;
+    try{
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      await audioCtx.resume();
+      sourceNode = audioCtx.createMediaElementSource(audio);
+      analyser = audioCtx.createAnalyser(); analyser.fftSize = 512;
+      sourceNode.connect(analyser); analyser.connect(audioCtx.destination);
+      dataArr = new Uint8Array(analyser.frequencyBinCount);
+      requestAnimationFrame(visualLoop);
+    }catch(e){ console.warn('initAudio error', e); }
+  }
+
+  function visualLoop(){
+    if(!analyser){ requestAnimationFrame(visualLoop); return; }
+    analyser.getByteFrequencyData(dataArr);
+    vctx.clearRect(0,0,viz.width,viz.height);
+    if(vizActive){
+      const nb = 64; const w = viz.width/nb;
+      for(let i=0;i<nb;i++){
+        const val = dataArr[i+8];
+        const h = (val/255) * (viz.height*0.36);
+        const x = i*w;
+        const hue = 260 - i*3;
+        vctx.fillStyle = `hsl(${hue} 100% ${50 - val/6}%)`;
+        vctx.fillRect(x, viz.height - h - 30, w*0.76, h);
+      }
+      const bass = dataArr.slice(0,8).reduce((a,b)=>a+b,0)/8;
+      const size = Math.min(160 + bass, 720); const cx = viz.width/2, cy = viz.height/2;
+      const g = vctx.createRadialGradient(cx,cy,0,cx,cy,size);
+      g.addColorStop(0, `rgba(255,0,200,${Math.min(0.24, bass/900)})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      vctx.fillStyle = g; vctx.fillRect(0,0,viz.width,viz.height);
+    }
+    requestAnimationFrame(visualLoop);
+  }
+
+  /* ----------------- Soft tamper detection ----------------- */
+  (function tamperCheck(){
+    const urlKey = (new URLSearchParams(location.search)).get('key');
+    if(urlKey && stored && urlKey.toUpperCase() !== stored.toUpperCase()){
+      showNotify('⚠ Phát hiện thay đổi key — đã chặn', false, true);
+      // do not overwrite stored in this case
+    }
+  })();
+
+  /* ----------------- Small UX: start warning near expiry ----------------- */
+  setInterval(()=>{ const diff = expireAt - Date.now(); if(diff>0 && diff < 2*60000) playAlert('warning'); }, 10000);
+
+  /* ----------------- End of script ----------------- */
+  </script>
 </body>
 </html>
